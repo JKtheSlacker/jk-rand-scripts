@@ -1,0 +1,21 @@
+#!/bin/bash
+# Script to view the contents of a package
+# Written by JK Wood <joshuakwood@gmail.com>
+
+if [ $# != 1 ]; then
+  echo
+  echo "Script for viewing package contents"
+  echo "Only displays first matching package"
+  echo
+  echo "Usage: $0 PACKAGE_NAME"
+  echo
+  exit 1
+fi
+
+if [ $(ls -1 /var/log/packages | grep -i -m 1 $1) ]; then
+  less $(find /var/log/packages -iname $(ls /var/log/packages | grep -i -m 1 $1))
+else
+  echo "No package matching that name found." 
+fi
+
+exit;
