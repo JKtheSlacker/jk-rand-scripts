@@ -1,0 +1,20 @@
+#!/bin/bash
+# Script to search packages for a file
+# Written by JK Wood <joshuakwood@gmail.com>
+
+if [ $# != 1 ]; then
+  echo 
+  echo "Script for finding files in packages"
+  echo 
+  echo "Usage: $0 DESIRED_FILE"
+  echo
+  exit 1
+fi
+
+if [ $(grep -i -m 1 $1 /var/log/packages/* | grep -m 1 packages) ]; then
+  grep -i $1 /var/log/packages/* | less
+else
+  echo "File not found in package list."
+fi
+
+exit
