@@ -1,0 +1,15 @@
+#!/bin/bash
+# Script to search for packages, round three
+# Written by JK Wood <joshuakwood@gmail.com>
+
+if [ $# != 1 ]; then
+  echo
+  echo "Script for listing packages"
+  echo
+  echo "Usage: $0 PACKAGE_NAME"
+  echo
+  exit 1
+fi
+
+ls -1 /var/log/packages | grep -i $1 ;
+exit;
