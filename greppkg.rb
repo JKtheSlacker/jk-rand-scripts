@@ -10,13 +10,12 @@
 # the method you want, you just write it and move on.
 class File
 	def include? pattern
-		found_pattern = false
 		each_line do |line|
 			if line.include? pattern
-				found_pattern = true
+				return true
 			end
 		end
-		found_pattern
+		return false
 	end
 end
 
