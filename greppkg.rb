@@ -42,11 +42,11 @@ Dir.foreach("/var/log/packages") do |filename|
 		if file.include? ARGF.argv[0]
 			puts "In #{filename}:"
 			foundMatch = true
-		end
-		file.rewind
-		file.each_line do |line|
-			if line.include? ARGF.argv[0]
-				puts "     #{line}"
+			file.rewind
+			file.each_line do |line|
+				if line.include? ARGF.argv[0]
+					puts "     #{line}"
+				end
 			end
 		end
 		file.close
