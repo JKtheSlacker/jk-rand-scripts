@@ -1,0 +1,59 @@
+#!/bin/sh
+# Only run usbreset if there have been errors
+# Written by JK Wood <joshuakwood@gmail.com>
+# 09/08/2018
+
+# Depends on the excellent usbreset script from:
+# http://billauer.co.il/blog/2013/02/usb-reset-ehci-uhci-linux/
+
+# Script is released under the Dog-on-Fire License:
+# If use of this script causes your dog to catch on fire,
+# you agree to send me five dollars.  Or a picture
+# of the dog on fire.
+# Otherwise, you're on your own.  I've tested the script
+# on my own computer, and it hasn't broken anything.
+# So if it does it on your computer, that falls in
+# the realm of "Not my problem."
+#
+# Of course, if you'll send a bug report to the above
+# email address, I may be able to see what you did
+# wrong and prevent it from happening in the future.
+# In which case, I may just send YOU five dollars.
+
+# Oh, and feel free to copy it and modify it as you
+# see fit. Or as I see fit. Or as I fit. Although
+# that is unlikely, as I am rather tall.
+
+# I put this job in cron to run every 4 hours.
+# This will make it configurable, though.
+HOURS_TO_LOOK=4
+FIRST_PASS=1
+
+# We'll use this variable to ensure we only reset
+# once at the end, even if we have mutliple hits.
+FOUND=0
+
+while [ $HOURS_TO_LOOK -gt 0 ]
+do
+  DATESTRING1="date -d '"
+  DATESTRING2=" hour ago' +"
+  DATESTRING3='"%a %b %_d %0H:"'
+  DATESTRING=$DATESTRING1$HOURS_TO_LOOK$DATESTRING2$DATESTRING3
+  CHECKDATE=$(eval $DATESTRING)
+  # Filter out the first minute of the first pass
+  # Avoids false positive chain resets
+  if [ $FIRST_PASS -eq 1 ]; then
+    FIRSTMIN="00"
+    REJECTDATE=$CHECKDATE$FIRSTMIN
+  fi
+  CHECKDATE=$(eval $DATESTRING)
+  if [ $FOUND -eq 0 ]; then
+    FOUND=$(dmesg -T | grep "$CHECKDATE" | grep -v "$REJECTDATE" | grep usb | grep err | wc -l)
+  fi
+  ((HOURS_TO_LOOK--))
+  ((FIRST_PASS=0))
+done
+
+if [ $FOUND -gt 5 ]; then
+  /usr/local/sbin/usbreset
+fi
