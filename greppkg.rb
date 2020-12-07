@@ -11,7 +11,7 @@
 class File
 	def include? pattern
 		each_line do |line|
-			if line.include? pattern
+      if line.downcase.include? pattern.downcase
 				return true
 			end
 		end
@@ -35,7 +35,7 @@ end
 origDir = Dir.pwd
 foundMatch = false
 Dir.chdir "/var/log/packages/"
-Dir.foreach("/var/log/packages") do |filename|
+Dir.foreach("/var/log/packages/") do |filename|
 	if !File.directory? filename
 		file = File.open filename
 		if file.include? ARGF.argv[0]
@@ -43,7 +43,7 @@ Dir.foreach("/var/log/packages") do |filename|
 			foundMatch = true
 			file.rewind
 			file.each_line do |line|
-				if line.include? ARGF.argv[0]
+        if line.downcase.include? ARGF.argv[0].downcase
 					puts "     #{line}"
 				end
 			end
