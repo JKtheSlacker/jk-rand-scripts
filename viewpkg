@@ -12,8 +12,13 @@ if [ $# != 1 ]; then
   exit 1
 fi
 
-if [ $(ls -1 /var/log/packages | grep -i -m 1 $1) ]; then
-  less $(find /var/log/packages -iname $(ls /var/log/packages | grep -i -m 1 $1))
+# First, try to find a package starting with that name
+if [ $(ls -1 /var/log/packages/$1*| grep -i -m 1 $1) ]; then
+  less $(ls -1 /var/log/packages/$1* | grep -i -m 1 $1)
+# If you didn't find a package starting with that name, search the whole thing
+elif [ $(ls -1 /var/log/packages/ | grep -i -m 1 $1) ]; then
+  less $(find /var/log/packages/ -iname $(ls /var/log/packages/ | grep -i -m 1 $1))
+# Must not have one
 else
   echo "No package matching that name found." 
 fi
