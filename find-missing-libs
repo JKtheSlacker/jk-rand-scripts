@@ -1,0 +1,17 @@
+#!/bin/bash
+# Script to find missing library references
+# in the directory specified in the first
+# parameter.
+
+cd $1
+
+for i in *; do
+  results=$(ldd $i 2>&1 | grep -i found)
+  num_results=$(ldd $i 2>&1 | grep -i found | wc -c)
+
+  if [ $num_results -gt 0 ]
+  then
+    echo $i
+    echo $results
+  fi
+done
