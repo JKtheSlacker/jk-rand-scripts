@@ -23,7 +23,7 @@
 # see fit. Or as I see fit. Or as I fit. Although
 # that is unlikely, as I am rather tall.
 
-cd $1
+cd "$1"
 
 for i in *; do
   results=$(ldd $i 2>&1 | grep -i found)
